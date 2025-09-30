@@ -1,0 +1,42 @@
+id,marque,modele,capacite,prix_dh,gamme,version_catalogue,link
+sp_001,SAMSUNG,Galaxy A06,64 Go,990,entree,2025-07,https://offres.iam.ma/smartphones
+sp_002,SAMSUNG,Galaxy A06,128 Go,1249,entree,2025-07,https://offres.iam.ma/smartphones
+sp_003,SAMSUNG,Galaxy A16,128 Go,1749,entree,2025-07,https://offres.iam.ma/smartphones
+sp_004,SAMSUNG,Galaxy A16,256 Go,2490,entree,2025-07,https://offres.iam.ma/smartphones
+sp_005,SAMSUNG,Galaxy A26,256 Go,3749,moyen,2025-07,https://offres.iam.ma/smartphones
+sp_006,SAMSUNG,Galaxy A36,256 Go,4890,moyen,2025-07,https://offres.iam.ma/smartphones
+sp_007,SAMSUNG,Galaxy A56,256 Go,5649,haut,2025-07,https://offres.iam.ma/smartphones
+sp_008,SAMSUNG,Galaxy S25,256 Go,11490,haut,2025-07,https://offres.iam.ma/smartphones
+sp_009,SAMSUNG,Galaxy S25,512 Go,12990,haut,2025-07,https://offres.iam.ma/smartphones
+sp_010,SAMSUNG,Galaxy S25 Plus,256 Go,12990,haut,2025-07,https://offres.iam.ma/smartphones
+sp_011,SAMSUNG,Galaxy S25 Plus,512 Go,14490,haut,2025-07,https://offres.iam.ma/smartphones
+sp_012,SAMSUNG,Galaxy S25 Ultra,256 Go,16490,haut,2025-07,https://offres.iam.ma/smartphones
+sp_013,SAMSUNG,Galaxy S25 Ultra,512 Go,18490,haut,2025-07,https://offres.iam.ma/smartphones
+sp_014,APPLE,iPhone 16,128 Go,13399,haut,2025-07,https://offres.iam.ma/smartphones
+sp_015,APPLE,iPhone 16,256 Go,15259,haut,2025-07,https://offres.iam.ma/smartphones
+sp_016,APPLE,iPhone 16 Plus,128 Go,15499,haut,2025-07,https://offres.iam.ma/smartphones
+sp_017,APPLE,iPhone 16 Plus,256 Go,17359,haut,2025-07,https://offres.iam.ma/smartphones
+sp_018,APPLE,iPhone 16 Pro,128 Go,16899,haut,2025-07,https://offres.iam.ma/smartphones
+sp_019,APPLE,iPhone 16 Pro,256 Go,18779,haut,2025-07,https://offres.iam.ma/smartphones
+sp_020,APPLE,iPhone 16 Pro,512 Go,22299,haut,2025-07,https://offres.iam.ma/smartphones
+sp_021,APPLE,iPhone 16 Pro Max,256 Go,19999,haut,2025-07,https://offres.iam.ma/smartphones
+sp_022,APPLE,iPhone 16 Pro Max,512 Go,23979,haut,2025-07,https://offres.iam.ma/smartphones
+sp_023,APPLE,iPhone 16 Pro Max,1 To,27499,haut,2025-07,https://offres.iam.ma/smartphones
+sp_024,XIAOMI,Redmi A3x,64 Go,990,entree,2025-07,https://offres.iam.ma/smartphones
+sp_025,XIAOMI,Redmi 14C,128 Go,1349,entree,2025-07,https://offres.iam.ma/smartphones
+sp_026,XIAOMI,Redmi Note 14,256 Go,2249,entree,2025-07,https://offres.iam.ma/smartphones
+sp_027,XIAOMI,Redmi Note 14 Pro 5G,256 Go,3949,moyen,2025-07,https://offres.iam.ma/smartphones
+sp_028,XIAOMI,Redmi Note 14 Pro+ 5G,512 Go,5249,haut,2025-07,https://offres.iam.ma/smartphones
+sp_029,OPPO,A3x,64 Go,1290,entree,2025-07,https://offres.iam.ma/smartphones
+sp_030,OPPO,A3x,128 Go,1490,entree,2025-07,https://offres.iam.ma/smartphones
+sp_031,OPPO,A3,128 Go,1790,entree,2025-07,https://offres.iam.ma/smartphones
+sp_032,OPPO,Reno12 F,256 Go,3449,moyen,2025-07,https://offres.iam.ma/smartphones
+sp_033,HONOR,X6,64 Go,999,entree,2025-07,https://offres.iam.ma/smartphones
+sp_034,HONOR,X5b Plus,128 Go,1249,entree,2025-07,https://offres.iam.ma/smartphones
+sp_035,HONOR,X7a,128 Go,1399,entree,2025-07,https://offres.iam.ma/smartphones
+sp_036,HONOR,X8a,128 Go,1899,entree,2025-07,https://offres.iam.ma/smartphones
+sp_037,HONOR,X7c,256 Go,1990,entree,2025-07,https://offres.iam.ma/smartphones
+sp_038,HONOR,X9c,256 Go,4090,moyen,2025-07,https://offres.iam.ma/smartphones
+sp_039,TECNO,Spark Go 2024,64 Go,879,entree,2025-07,https://offres.iam.ma/smartphones
+sp_040,TECNO,Spark Go 1,128 Go,1069,entree,2025-07,https://offres.iam.ma/smartphones
+sp_041,TECNO,Spark 30C,256 Go,1549,entree,2025-07,https://offres.iam.ma/smartphones

@@ -1,0 +1,55 @@
+id,cta,famille,libelle,volume,minutes,sms,validite_jours,prix_dh,zone,link,version_catalogue
+offre_001,*3,USAGE_Internet,Pass Internet Jawal,500,,,1,5,,https://bit.ly/Recharge_IAM,2025-07
+offre_002,*3,USAGE_Internet,Pass Internet Jawal,1024,,,3,10,,https://bit.ly/Recharge_IAM,2025-07
+offre_003,*3,USAGE_Internet,Pass Internet Jawal,2048,,,7,20,,https://bit.ly/Recharge_IAM,2025-07
+offre_004,*3,USAGE_Internet,Pass Internet Jawal,5120,,,30,50,,https://bit.ly/Recharge_IAM,2025-07
+offre_005,*3,USAGE_Internet,Pass Internet Jawal,10240,,,30,100,,https://bit.ly/Recharge_IAM,2025-07
+offre_006,*6,USAGE_Internet,Pass Réseaux Sociaux,100,,,3,5,"Whatsapp, Instagram, Facebook, Messenger, X, Snapchat",https://bit.ly/Recharge_IAM,2025-07
+offre_007,*6,USAGE_Internet,Pass Réseaux Sociaux,300,,,7,10,"Whatsapp, Instagram, Facebook, Messenger, X, Snapchat",https://bit.ly/Recharge_IAM,2025-07
+offre_008,*6,USAGE_Internet,Pass Réseaux Sociaux,1024,,,14,20,"Whatsapp, Instagram, Facebook, Messenger, X, Snapchat",https://bit.ly/Recharge_IAM,2025-07
+offre_009,*6,USAGE_Internet,Pass Réseaux Sociaux,2048,,,30,30,"Whatsapp, Instagram, Facebook, Messenger, X, Snapchat",https://bit.ly/Recharge_IAM,2025-07
+offre_010,*2,USAGE_Mixte,Pass Jawal,25,25,,3,5,,https://bit.ly/Recharge_IAM,2025-07
+offre_011,*2,USAGE_Mixte,Pass Jawal,60,50,,7,10,,https://bit.ly/Recharge_IAM,2025-07
+offre_012,*2,USAGE_Mixte,Pass Jawal,250,90,,7,20,,https://bit.ly/Recharge_IAM,2025-07
+offre_013,*22,USAGE_Voix,Pass National,,50,,1,5,,https://bit.ly/Recharge_IAM,2025-07
+offre_014,*22,USAGE_Voix,Pass National,,105,,3,10,,https://bit.ly/Recharge_IAM,2025-07
+offre_015,*4,USAGE_Voix,Pass International et National,,60,,14,20,National + International,https://bit.ly/Recharge_IAM,2025-07
+offre_016,*4,USAGE_Voix,Pass International et National,,150,,14,50,National + International,https://bit.ly/Recharge_IAM,2025-07
+offre_017,*4,USAGE_Voix,Pass International et National,,300,,14,100,National + International,https://bit.ly/Recharge_IAM,2025-07
+offre_018,*5,USAGE_Mixte,Pass Jawal Tout en Un,415,27,100,7,5,,https://bit.ly/Recharge_IAM,2025-07
+offre_019,*5,USAGE_Mixte,Pass Jawal Tout en Un,830,54,200,10,10,,https://bit.ly/Recharge_IAM,2025-07
+offre_020,*5,USAGE_Mixte,Pass Jawal Tout en Un,1638,108,400,14,20,,https://bit.ly/Recharge_IAM,2025-07
+offre_021,*7,USAGE_Roaming,Pass Roaming Multiservices,2048,40,60,30,100,International,https://bit.ly/Recharge_IAM,2025-07
+offre_022,*7,USAGE_Roaming,Pass Roaming Multiservices,5120,120,200,30,200,International,https://bit.ly/Recharge_IAM,2025-07
+offre_023,*7,USAGE_Roaming,Pass Roaming Multiservices,9216,180,300,30,300,International,https://bit.ly/Recharge_IAM,2025-07
+offre_024,*77,USAGE_Roaming,Pass Africa Roaming,4096,20,20,14,300,Afrique,https://bit.ly/Recharge_IAM,2025-07
+offre_025,*77,USAGE_Roaming,Pass Africa Roaming,9216,60,60,14,665,Afrique,https://bit.ly/Recharge_IAM,2025-07
+offre_026,*77,USAGE_Roaming,Pass Africa Roaming,16384,120,120,14,1200,Afrique,https://bit.ly/Recharge_IAM,2025-07
+offre_027,*78,USAGE_Roaming,Pass Roaming Internet,1024,,,7,50,International,https://bit.ly/Recharge_IAM,2025-07
+offre_028,*78,USAGE_Roaming,Pass Roaming Internet,2048,,,30,100,International,https://bit.ly/Recharge_IAM,2025-07
+offre_029,*78,USAGE_Roaming,Pass Roaming Internet,5120,,,30,200,International,https://bit.ly/Recharge_IAM,2025-07
+offre_030,*78,USAGE_Roaming,Pass Roaming Internet,9216,,,30,300,International,https://bit.ly/Recharge_IAM,2025-07
+offre_031,*88,USAGE_Divertissement,Pass Gaming,500,,,7,5,"Garena Free Fire, Discord, LoL, PubG",https://bit.ly/Recharge_IAM,2025-07
+offre_032,*88,USAGE_Divertissement,Pass Gaming,1024,,,15,10,"Garena Free Fire, Discord, LoL, PubG",https://bit.ly/Recharge_IAM,2025-07
+offre_033,*88,USAGE_Divertissement,Pass Gaming,2048,,,30,20,"Garena Free Fire, Discord, LoL, PubG",https://bit.ly/Recharge_IAM,2025-07
+offre_034,*88,USAGE_Divertissement,Pass Gaming,3072,,,30,30,"Garena Free Fire, Discord, LoL, PubG",https://bit.ly/Recharge_IAM,2025-07
+offre_035,*8,USAGE_Roaming,Pass Recharge Roaming Internet,,,,90,100,International,https://bit.ly/Recharge_IAM,2025-07
+offre_036,*8,USAGE_Roaming,Pass Recharge Roaming Internet,,,,90,200,International,https://bit.ly/Recharge_IAM,2025-07
+offre_037,*8,USAGE_Roaming,Pass Recharge Roaming Internet,,,,90,300,International,https://bit.ly/Recharge_IAM,2025-07
+offre_038,*8,USAGE_Roaming,Pass Recharge Roaming Internet,,,,90,665,International,https://bit.ly/Recharge_IAM,2025-07
+offre_039,*8,USAGE_Roaming,Pass Recharge Roaming Internet,,,,90,1200,International,https://bit.ly/Recharge_IAM,2025-07
+offre_040,Option_Illimite_IAM,USAGE_Voix,Option Illimité IAM,,-1,,30,59,National,https://bit.ly/Recharge_IAM,2025-07
+offre_041,*9,USAGE_Divertissement,MT FOOT Pass Hebdo,,,,7,10,,https://bit.ly/Recharge_IAM,2025-07
+offre_042,*9,USAGE_Divertissement,STARZPLAY Pass Hebdo,,,,7,17.5,,https://bit.ly/Recharge_IAM,2025-07
+offre_043,*9,USAGE_Divertissement,STARZPLAY Pass Mensuel,,,,30,35,,https://bit.ly/Recharge_IAM,2025-07
+offre_044,*9,USAGE_Divertissement,Anghami Pass 10 jours,,,,10,15,,https://bit.ly/Recharge_IAM,2025-07
+offre_045,*9,USAGE_Divertissement,Anghami Pass 30 jours,,,,30,35,,https://bit.ly/Recharge_IAM,2025-07
+offre_046,Forfait_Business,USAGE_Mixte,Forfait Business Control 5H,6144,300,,30,69,National,https://bit.ly/Recharge_IAM,2025-07
+offre_047,Forfait_Business,USAGE_Mixte,Forfait Business Control 11H,11264,660,,30,115,National,https://bit.ly/Recharge_IAM,2025-07
+offre_048,Forfait_Business,USAGE_Mixte,Forfait Business Class 40H,30720,2400,,30,331,National,https://bit.ly/Recharge_IAM,2025-07
+offre_049,*1,USAGE_SMS,Pass Jawal SMS,,,50,1,5,National,https://bit.ly/Recharge_IAM,2025-09
+offre_050,*1,USAGE_SMS,Pass Jawal SMS,,,100,1,10,National,https://bit.ly/Recharge_IAM,2025-09
+offre_051,*1,USAGE_SMS,Pass Jawal SMS,,,200,1,20,National,https://bit.ly/Recharge_IAM,2025-09
+offre_052,*1,USAGE_SMS,Pass Jawal SMS,,,300,1,30,National,https://bit.ly/Recharge_IAM,2025-09
+offre_053,*1,USAGE_SMS,Pass Jawal SMS,,,500,1,50,National,https://bit.ly/Recharge_IAM,2025-09
+offre_054,*1,USAGE_SMS,Pass Jawal SMS,,,1000,1,100,National,https://bit.ly/Recharge_IAM,2025-09

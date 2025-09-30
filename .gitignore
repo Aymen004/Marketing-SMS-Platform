@@ -1,0 +1,75 @@
+# ---- Python / FastAPI / Streamlit base ----
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+.envrc
+
+# Environments & secrets
+.env
+.env.*
+!.env.example
+
+# Distribution / packaging
+build/
+dist/
+.eggs/
+*.egg-info/
+
+# PyInstaller
+*.spec
+
+# Unit test / coverage
+.pytest_cache/
+.coverage*
+htmlcov/
+.tox/
+
+# Notebooks / reports
+.ipynb_checkpoints/
+
+# Logs & runtime
+logs/
+*.log
+*.pid
+*.sqlite3
+
+# Caches
+.cache/
+.mypy_cache/
+.pyre/
+.pytype/
+ruff_cache/
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Streamlit transient
+.streamlit/
+
+# Data artifacts (keep raw segmentation CSVs committed if needed)
+# Uncomment if you want to exclude large generated data
+# segmentationRAG/data/*.parquet
+
+# Qdrant / embeddings local dumps
+embeddings.cache
+vector_store/
+
+# Node / frontend (if later added)
+node_modules/
+
+# Coverage artifacts
+coverage.xml
+
+# Temporary
+tmp/
+*.tmp
+*.bak
+~$*
