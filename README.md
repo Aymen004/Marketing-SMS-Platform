@@ -13,9 +13,9 @@ Persona-driven, catalog-aware SMS campaign generation. This platform combines:
 ---
 ## Architecture Overview
 ```
-+-------------------+          +-------------------+         +--------------------+
-| Browser |  --->    |  Streamlit UI     |  --->   | FastAPI Compose API|
-+-------------------+          +---------+---------+         +---------+----------+
+   +---------------+          +-------------------+         +--------------------+
+   |    Browser    |    --->  |    Streamlit UI   |  --->   | FastAPI Compose API|
+   +---------------+          +---------+---------+         +---------+----------+
                                           |                             |
                                           | (Qdrant client + CSV)       |
                                           v                             v
