@@ -139,8 +139,7 @@ A production-oriented orchestration prototype (n8n + Airflow) was used in produc
 ## Automation Video Demo (n8n Workflow)
 End‑to‑end n8n orchestration run (Segmentation → RAG + finetuned LLM → Telegram dispatch)
 
-[n8n Automation Demo](./n8nDemo.mp4)
-
+https://github.com/user-attachments/assets/e798c2ae-42df-456e-a061-6835ea36304c
 
 ---
 ## Quick Start TL;DR
