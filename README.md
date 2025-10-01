@@ -53,6 +53,7 @@ app/                # FastAPI compose service
 ui/                 # Streamlit front-end
 segmentationRAG/    # Segmentation + catalog CSVs + build_index.py (Qdrant)
 finetuning/         # LoRA training scripts, dataset samples, merge + 4bit quantization notes
+n8nDemo.mp4         # Recorded automation workflow demo
 requirements.txt    # Python dependencies
 .env.example        # Environment variable template
 ```
@@ -122,19 +123,24 @@ Core intelligence layer:
 Segmentation (PySpark) → Orchestrated (Airflow) → FastAPI Compose (RAG + catalogs) 
     → LLM Inference (finetuned Mistral) → SMS Preview (Streamlit) → Delivery (Telegram Bot)
 ```
+## Live Demo
+- Streamlit UI (deployed): https://streamlit-ui-mgwb.onrender.com  
+  Explore: persona selection → contextual insights → RAG JSON → generated SMS → send via Telegram.
 
-## Automated Pipeline Prototype (Scalable Variant)
-A production-oriented orchestration prototype (n8n + Airflow) was drafted:
+
+## Automated Pipeline n8n Prototype 
+A production-oriented orchestration prototype (n8n + Airflow) was used in production:
 1. Batch customer clustering / segmentation (PySpark jobs)
 2. Scheduled via Airflow (daily audience refresh)
 3. n8n workflow calls Compose API (RAG enrichment for offers/handsets)
 4. 4-bit finetuned LLM generates targeted SMS
-5. Delivery channel abstraction (Telegram API prototype → extensible to SMS gateway / CPaaS)
-6. (Planned) Logging & feedback loop for A/B variants & conversion metrics
+5. Delivery channel  (Telegram API prototype → extensible to SMS gateways)
 
-## Live Demo
-- Streamlit UI (deployed): https://streamlit-ui-mgwb.onrender.com  
-  Explore: persona selection → contextual insights → RAG JSON → generated SMS → send via Telegram.
+## Automation Video Demo (n8n Workflow)
+End‑to‑end n8n orchestration run (Segmentation → RAG + finetuned LLM → Telegram dispatch)
+
+[n8n Automation Demo](./n8nDemo.mp4)
+
 
 ---
 ## Quick Start TL;DR
@@ -143,3 +149,4 @@ cp .env.example .env
 pip install -r requirements.txt
 uvicorn app.main:app --port 8000 &
 streamlit run ui/app.py
+```
