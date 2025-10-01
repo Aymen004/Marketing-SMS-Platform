@@ -143,11 +143,3 @@ cp .env.example .env
 pip install -r requirements.txt
 uvicorn app.main:app --port 8000 &
 streamlit run ui/app.py
-```
----
-## Quick Start TL;DR
-```bash
-cp .env.example .env
-pip install -r requirements.txt
-uvicorn app.main:app --port 8000 &
-streamlit run ui/app.py
