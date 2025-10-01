@@ -73,3 +73,11 @@ tmp/
 *.tmp
 *.bak
 ~$*
+
+# Finetuning artifacts
+finetuning/**/checkpoint-*/
+finetuning/**/trainer_state.json
+finetuning/**/runs/
+finetuning/**/adapters-safe/
+finetuning/**/merged/
+finetuning/output/
