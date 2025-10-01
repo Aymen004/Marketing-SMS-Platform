@@ -54,7 +54,6 @@ app/                # FastAPI compose service
 ui/                 # Streamlit front-end
 segmentationRAG/    # Segmentation + catalog CSVs + build_index.py (Qdrant)
 finetuning/         # LoRA training scripts, dataset samples, merge + 4bit quantization notes
-n8nDemo.mp4         # Recorded automation workflow demo
 requirements.txt    # Python dependencies
 .env.example        # Environment variable template
 ```
