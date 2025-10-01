@@ -1,14 +1,17 @@
-# Marketing SMS Platform (Maroc Telecom Demo)
+# Marketing SMS Platform - RAG + Finetuned LLM - n8n automation
 
-Persona-driven, catalog-aware SMS campaign generation. This platform combines:
+Persona-driven, catalog-aware SMS campaign generation. This platform combines real customer usage segmentation, vector-based offer retrieval (Qdrant RAG), and a finetuned telecom-specialized LLM to produce compliant marketing SMS copy automatically. Streamlit UI Demo : https://streamlit-ui-mgwb.onrender.com
 
-- **Segmentation CSV data** (usage family + persona)  
-- **Offer & handset catalogs** (CSV + optional Qdrant vector retrieval)  
-- **RAG compose API (FastAPI)** that builds a structured JSON prompt  
-- **Mock or Live LLM generation** (Streamlit UI toggles)  
-- **Telegram delivery** of the generated SMS  
+## Overview
+This project showcases an end-to-end marketing pipeline prototype:
+- Transforms raw segmentation + product catalogs into high-conversion contextual SMS.
+- Uses Qdrant-powered semantic retrieval to surface the most relevant offer or device for a customer usage profile.
+- Leverages a 4-bit quantized, finetuned Mistral-7B-Instruct-v0.2 model trained on prior Maroc Telecom promotional messages (style, tone, constraints).
+- Supports both mock deterministic templates (fast iteration) and live inference (Colab/ngrok → vLLM serving).
+- Includes a production-minded automation design (PySpark segmentation → Airflow scheduling → RAG enrichment → LLM generation → Telegram API delivery → scalable orchestration via n8n).
+- Deployed Streamlit UI (public demo): https://streamlit-ui-mgwb.onrender.com
 
-> Open the Streamlit UI, select audience + CTA/brand, the app retrieves structured context via the compose FastAPI service, then an LLM (mock templates or remote vLLM) produces a single compliant marketing SMS.
+Result: A recruiter or engineering leader can see product thinking (UX + explainability), ML lifecycle awareness (RAG + fine-tuning + quantization), and operational foresight (automation pipeline prototype).
 
 ---
 ## Architecture Overview
@@ -36,26 +39,27 @@ Persona-driven, catalog-aware SMS campaign generation. This platform combines:
 | Feature | Description |
 |---------|-------------|
 | Persona + Family selection | Dependent dropdowns drive context & insights text. |
-| RAG Compose | FastAPI assembles structured JSON from segmentation + catalog. |
-| Mock SMS Generation | Rotating curated templates (speed & predictability). |
-| Live vLLM Inference | OpenAI-compatible chat payload to finetuned Mistral (ngrok base). |
-| Mobile Preview | Styled device mockup with offer metrics. |
-| Telegram Delivery | Send generated SMS to an operator via bot. |
-| JSON Transparency | Expand to see raw `llm_input_json`. |
+| Qdrant-backed RAG | Retrieves semantically aligned offers/devices for the usage persona. |
+| JSON Transparency | Full structured payload shown for debugging & trust. |
+| Finetuned LLM | Telecom‑style constrained generation (pricing + CTA discipline). |
+| Mock Mode | Fast deterministic templates for UX validation. |
+| Mobile Preview | Realistic phone frame + offer metrics. |
+| Telegram Delivery | Operator testing channel (extensible). |
 
 ---
 ## Repository Layout
 ```
 app/                # FastAPI compose service
 ui/                 # Streamlit front-end
-segmentationRAG/    # Segmentation + catalog CSVs
+segmentationRAG/    # Segmentation + catalog CSVs + build_index.py (Qdrant)
+finetuning/         # LoRA training scripts, dataset samples, merge + 4bit quantization notes
 requirements.txt    # Python dependencies
 .env.example        # Environment variable template
 ```
 
 ---
 ## Environment Variables
-Copy `.env.example` to `.env` (DO NOT COMMIT `.env`).
+Copy `.env.example` to `.env` .
 
 | Variable | Component | Purpose |
 |----------|-----------|---------|
@@ -74,113 +78,76 @@ Copy `.env.example` to `.env` (DO NOT COMMIT `.env`).
 | `SEGMENTATION_PATH` | Both | Path to segmentation CSV |
 
 ---
-## Local Development
-1. Create virtual env & install deps:
-   ```bash
-   python -m venv .venv
-   source .venv/Scripts/activate  # Windows PowerShell: .venv\Scripts\Activate.ps1
-   pip install -r requirements.txt
-   cp .env.example .env  # fill values
-   ```
-2. Run FastAPI compose API:
-   ```bash
-   uvicorn app.main:app --reload --port 8000
-   ```
-3. Run Streamlit UI:
-   ```bash
-   streamlit run ui/app.py
-   ```
-4. Open: http://localhost:8501 (default Streamlit) — ensure `API_BASE_URL=http://localhost:8000`.
+## Customer Segmentation (PySpark + Airflow)
+A PySpark data processing job (prototype DAG in Airflow) ingests raw telecom usage KPIs (data volume tiers, voice minute distributions, SMS counts, roaming events, handset metadata) and:
+- Normalizes & buckets usage signals
+- Assigns usage family (famille) + refined persona labels
+- Outputs a clean, denormalized segmentation_sms.csv consumed by both:
+  - Streamlit UI (dropdown population)
+  - FastAPI compose service (to enrich llm_input_json)
 
----
-## Live Inference (vLLM via Colab + ngrok)
-1. Launch provided Colab notebook (link in UI) & run all cells.
-2. Copy the printed public ngrok base (e.g. `https://xxxx.ngrok-free.app`).
-3. In UI set LLM Mode = Live inference.
-4. Paste base URL, validate: the UI hits `/health` then `/v1/models`.
-5. On success you see a green chip “Connected to vLLM”.
-6. Generate SMS → intermediate states: RAG fetch → LLM generation → success.
+Rationale: fast iterative offline segmentation without overfitting; Airflow scheduling makes the audience refresh reproducible.
 
-Payload (chat/completions):
-```json
-{
-  "model": "/content/drive/MyDrive/mt_iam/mistral7b_iam_sms_lora/merged_4bit",
-  "messages": [
-    {"role": "system", "content": "French marketing copy constraints ..."},
-    {"role": "user", "content": "<llm_input_json>"}
-  ],
-  "temperature": 0.8,
-  "top_p": 0.9,
-  "max_tokens": 140
-}
+## Qdrant Vector Index (build_index.py)
+The script segmentationRAG/build_index.py:
+- Loads offres.csv & smartphones.csv
+- Builds semantic text representations (SentenceTransformer intfloat/multilingual-e5-base)
+- Creates (or recreates) two Qdrant collections: offres and smartphones
+- Upserts vector embeddings + rich payload (price, validity, volumes, brand, model)
+- Normalized fields (ints/floats) enable post-retrieval filtering / scoring
+Outcome: The compose FastAPI service can perform similarity search to pull the most contextually aligned offer or handset for a given persona/famille before prompting the LLM.
+
+> This vector layer upgrades simple CSV lookups into intent/semantic-aware retrieval — improving personalization quality for the generated SMS.
+
+## RAG & LLM Stack
+Core intelligence layer:
+- Retrieval: Qdrant (semantic vectors) augments CSV catalog matches to refine offer/handset context for each audience (usage family + persona).
+- Composition: FastAPI service merges segmentation record + retrieved offer context → structured `llm_input_json`.
+- Generation: Two modes  
+  - Mock rotation (deterministic, zero cost)  
+  - Live inference: Finetuned Mistral-7B-Instruct-v0.2 via vLLM (4-bit quantized for fast, memory‑efficient serving)
+- Guardrails: Character limit enforcement, numeric fidelity (only values present in context), CTA inclusion.
+
+## Finetuning & Optimization
+- Base model: Mistral-7B-Instruct-v0.2
+- Domain corpus: Historical Maroc Telecom SMS & promotional copy (cleaned, normalized, deduped)
+- Objective: Style adaptation (tone, brevity, CTA discipline), compliance (price, volume, duration fidelity)
+- Techniques:
+  - LoRA fine-tune → merged & 4-bit quantized for deployment efficiency
+  - Prompt schema: System role enforces constraints; user payload = JSON context
+  - Deterministic rotation fallback ensures UX continuity when LLM unavailable
+
+## End-to-End Flow
+```
+Segmentation (PySpark) → Orchestrated (Airflow) → FastAPI Compose (RAG + catalogs) 
+    → LLM Inference (finetuned Mistral) → SMS Preview (Streamlit) → Delivery (Telegram Bot)
 ```
 
----
-## Qdrant Integration
-- Provide `QDRANT_URL` and `QDRANT_API_KEY`.
-- Ensure collections named in env exist (`offres`, `smartphones`).
-- The compose API optionally performs similarity retrieval to enrich `offer_context`.
-- In n8n or other orchestrators, call the FastAPI endpoints **not** Qdrant directly for composed JSON.
+## Automated Pipeline Prototype (Scalable Variant)
+A production-oriented orchestration prototype (n8n + Airflow) was drafted:
+1. Batch customer clustering / segmentation (PySpark jobs)
+2. Scheduled via Airflow (daily audience refresh)
+3. n8n workflow calls Compose API (RAG enrichment for offers/handsets)
+4. 4-bit finetuned LLM generates targeted SMS
+5. Delivery channel abstraction (Telegram API prototype → extensible to SMS gateway / CPaaS)
+6. (Planned) Logging & feedback loop for A/B variants & conversion metrics
 
----
-## Deployment on Render
-### FastAPI Service
-- Build: `pip install -r requirements.txt`
-- Start: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-- Set env vars (omit secrets from repo; fill in dashboard).
-
-### Streamlit UI
-- Build: same as above.
-- Start: `streamlit run ui/app.py --server.port $PORT --server.address 0.0.0.0`
-- Set `API_BASE_URL` to public FastAPI URL.
-
-### Optional
-- Add custom domain for Streamlit (e.g. `campaigns.example.com`).
-- Turn on auto deploys on main branch.
-
----
-## Security & Operational Notes
-| Concern | Recommendation |
-|---------|----------------|
-| Secrets in repo | Keep `.env` out of Git. Rotate any accidentally committed keys immediately. |
-| Qdrant key scope | Use least privilege / rotate periodically. |
-| LLM endpoint exposure | Ngrok URLs are ephemeral; require API key if you expose longer term. |
-| Input validation | Consider adding stricter schema validation in FastAPI for production. |
-| Rate limiting | Add a reverse proxy (Cloudflare / API Gateway) if public traffic grows. |
-
----
-## Testing
-Add basic unit tests (pytest included) for:
-- Template selection logic
-- Compose service JSON structure
-- Live LLM wrapper (mock the HTTP call)
-
-Run:
-```bash
-pytest -q
-```
-
----
-## Roadmap Ideas
-- Persist historical generations (PostgreSQL)
-- AB test multiple template variants
-- Multi-language expansion
-- Analytics dashboard (usage metrics)
-- OAuth / SSO for recruiter logins
-
----
-## License
-Add a license if distributing (MIT / Apache-2.0 recommended). Currently none specified.
+## Live Demo
+- Streamlit UI (deployed): https://streamlit-ui-mgwb.onrender.com  
+  Explore: persona selection → contextual insights → RAG JSON → generated SMS → send via Telegram.
 
 ---
 ## Quick Start TL;DR
 ```bash
-cp .env.example .env  # fill values
+cp .env.example .env
 pip install -r requirements.txt
 uvicorn app.main:app --port 8000 &
 streamlit run ui/app.py
 ```
-Open the UI, choose persona, generate SMS. Switch to Live inference if you have a running vLLM endpoint.
-
 ---
-**Note:** If any secret (e.g. Telegram bot token, Qdrant API key) was ever committed, rotate it now.
+## Quick Start TL;DR
+```bash
+cp .env.example .env
+pip install -r requirements.txt
+uvicorn app.main:app --port 8000 &
+streamlit run ui/app.py
