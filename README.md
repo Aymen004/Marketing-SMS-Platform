@@ -1,6 +1,9 @@
 # Marketing SMS Platform - RAG + Finetuned LLM - n8n automation
 
-Persona-driven, catalog-aware SMS campaign generation. This platform combines real customer usage segmentation, vector-based offer retrieval (Qdrant RAG), and a finetuned telecom-specialized LLM to produce compliant marketing SMS copy automatically. Streamlit UI Demo : https://streamlit-ui-mgwb.onrender.com
+Persona-driven, catalog-aware SMS campaign generation. This platform combines real customer usage segmentation, vector-based offer retrieval (Qdrant RAG), and a finetuned telecom-specialized LLM to produce compliant marketing SMS automatically. 
+[Streamlit Demo](https://streamlit-ui-mgwb.onrender.com)
+
+https://github.com/user-attachments/assets/e798c2ae-42df-456e-a061-6835ea36304c
 
 ## Overview
 This project showcases an end-to-end marketing pipeline prototype:
@@ -10,8 +13,6 @@ This project showcases an end-to-end marketing pipeline prototype:
 - Supports both mock deterministic templates (fast iteration) and live inference (Colab/ngrok → vLLM serving).
 - Includes a production-minded automation design (PySpark segmentation → Airflow scheduling → RAG enrichment → LLM generation → Telegram API delivery → scalable orchestration via n8n).
 - Deployed Streamlit UI (public demo): https://streamlit-ui-mgwb.onrender.com
-
-Result: A recruiter or engineering leader can see product thinking (UX + explainability), ML lifecycle awareness (RAG + fine-tuning + quantization), and operational foresight (automation pipeline prototype).
 
 ---
 ## Architecture Overview
@@ -98,7 +99,7 @@ The script segmentationRAG/build_index.py:
 - Normalized fields (ints/floats) enable post-retrieval filtering / scoring
 Outcome: The compose FastAPI service can perform similarity search to pull the most contextually aligned offer or handset for a given persona/famille before prompting the LLM.
 
-> This vector layer upgrades simple CSV lookups into intent/semantic-aware retrieval — improving personalization quality for the generated SMS.
+> This vector layer upgrades simple CSV lookups into intent/semantic-aware retrieval, improving personalization quality for the generated SMS.
 
 ## RAG & LLM Stack
 Core intelligence layer:
@@ -135,11 +136,6 @@ A production-oriented orchestration prototype (n8n + Airflow) was used in produc
 3. n8n workflow calls Compose API (RAG enrichment for offers/handsets)
 4. 4-bit finetuned LLM generates targeted SMS
 5. Delivery channel  (Telegram API prototype → extensible to SMS gateways)
-
-## Automation Video Demo (n8n Workflow)
-End‑to‑end n8n orchestration run (Segmentation → RAG + finetuned LLM → Telegram dispatch)
-
-https://github.com/user-attachments/assets/e798c2ae-42df-456e-a061-6835ea36304c
 
 ---
 ## Quick Start TL;DR
