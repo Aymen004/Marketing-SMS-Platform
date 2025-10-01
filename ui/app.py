@@ -1139,28 +1139,28 @@ def mock_llm(llm_input: Dict) -> str:
         ],
         ("OPPORTUNITE_Achat_Equipement","OPPORTUNITE_AchatNouveaute","HONOR"): [
             "EXCLUSIVITE Maroc Telecom ! Le nouveau  {model} {capacity} est disponible à {price}. Commandez-le dès maintenant sur notre e-boutique : {link}",
-            "Nouveauté HONOR chez Maroc Telecom ! Découvrez le {model} et son design élégant. Offre de lancement avec {bonus_data} offerts. Plus d'infos sur {link}",
+            "Nouveauté HONOR chez Maroc Telecom ! Découvrez le {model} et son design élégant. Offre de lancement offerts. Plus d'infos sur {link}",
             "Ne manquez pas le lancement du  {model} chez Maroc Telecom. Un style premium et des performances de pointe. Commandez-le sur {link}",
             "Réservez votre nouveau  {model} chez Maroc Telecom et recevez une montre connectée offerte ! Offre limitée. Tous les détails sur {link}",
             "Le nouveau  {model} est arrivé chez Maroc Telecom. Profitez de son autonomie record pour seulement {price}. Découvrez-le sur {link}"
         ],
         ("OPPORTUNITE_Achat_Equipement","OPPORTUNITE_AchatNouveaute","OPPO"): [
             "EXCLUSIVITE Maroc Telecom ! Le nouveau {model} {capacity} est disponible à {price}. Commandez-le dès maintenant sur notre e-boutique : {link}",
-            "Nouveauté OPPO chez Maroc Telecom ! Découvrez le {model} et son design élégant. Offre de lancement avec {bonus_data} offerts. Plus d'infos sur {link}",
+            "Nouveauté OPPO chez Maroc Telecom ! Découvrez le {model} et son design élégant. Offre de lancement offerts. Plus d'infos sur {link}",
             "Ne manquez pas le lancement du  {model} chez Maroc Telecom. Un style premium et des performances de pointe. Commandez-le sur {link}",
             "Réservez votre nouveau {model} chez Maroc Telecom et recevez une montre connectée offerte ! Offre limitée. Tous les détails sur {link}",
             "Le nouveau {model} est arrivé chez Maroc Telecom. Profitez de son autonomie record pour seulement {price}. Découvrez-le sur {link}"
         ],
         ("OPPORTUNITE_Achat_Equipement","OPPORTUNITE_AchatNouveaute","TECNO"): [
             "EXCLUSIVITE Maroc Telecom ! Le nouveau  {model} {capacity} est disponible à {price}. Commandez-le dès maintenant sur notre e-boutique : {link}",
-            "Nouveauté TECNO chez Maroc Telecom ! Découvrez le {model} et son design élégant. Offre de lancement avec {bonus_data} offerts. Plus d'infos sur {link}",
+            "Nouveauté TECNO chez Maroc Telecom ! Découvrez le {model} et son design élégant. Offre de lancement offerts. Plus d'infos sur {link}",
             "Ne manquez pas le lancement du {model} chez Maroc Telecom. Un style premium et des performances de pointe. Commandez-le sur {link}",
             "Réservez votre nouveau {model} chez Maroc Telecom et recevez une montre connectée offerte ! Offre limitée. Tous les détails sur {link}",
             "Le nouveau {model} est arrivé chez Maroc Telecom. Profitez de son autonomie record pour seulement {price}. Découvrez-le sur {link}"
         ],
         ("OPPORTUNITE_Achat_Equipement","OPPORTUNITE_AchatNouveaute","XIAOMI"): [
             "EXCLUSIVITE Maroc Telecom ! Le nouveau {model} {capacity} est disponible à {price}. Commandez-le dès maintenant sur notre e-boutique : {link}",
-            "Nouveauté Xiaomi chez Maroc Telecom ! Découvrez le {model} et son processeur ultra-performant. Offre de lancement avec {bonus_data} offerts. Plus d'infos sur {link}",
+            "Nouveauté Xiaomi chez Maroc Telecom ! Découvrez le {model} et son processeur ultra-performant. Offre de lancement offerts. Plus d'infos sur {link}",
             "Ne manquez pas le lancement du {model} chez Maroc Telecom. Un design premium et des performances de pointe. Commandez-le sur {link}",
             "Réservez votre nouveau {model} chez Maroc Telecom et recevez des écouteurs sans fil offerts ! Offre limitée. Tous les détails sur {link}",
             "Le nouveau {model} est arrivé chez Maroc Telecom. Profitez de son autonomie record pour seulement {price}. Découvrez-le sur {link}"
@@ -1171,34 +1171,31 @@ def mock_llm(llm_input: Dict) -> str:
             "L'iPhone reconditionné est disponible chez Maroc Telecom ! À partir de {price} seulement, avec une garantie de 12 mois. Commandez-le vite sur {link}",
             "Passez à l'iPhone avec Maroc Telecom ! Découvrez nos offres sur l' {model} {capacity} à partir de {price}. L'expérience Apple à un prix accessible. {link}",
             "Offre spéciale Maroc Telecom : l' {model} à un prix exceptionnel. Idéal pour découvrir l'écosystème Apple. Tous les détails sur {link}",
-            "Pour votre premier smartphone, choisissez la sécurité Apple avec Maroc Telecom. L' {model} est à {price} avec {bonus_data} de bienvenue. {link}",
+            "Pour votre premier smartphone, choisissez la sécurité Apple avec Maroc Telecom. L' {model} est à {price} de bienvenue. {link}",
             "Un iPhone pour tous chez Maroc Telecom ! Profitez de nos offres sur les modèles neufs ou reconditionnés. L' {model} dès {price}. {link}"
         ],
         ("OPPORTUNITE_Achat_Equipement","OPPORTUNITE_AchatSmartphone","SAMSUNG"): [
-            "Les bonnes affaires, c'est chez Maroc Telecom ! Profitez du {model} à partir de {price} au lieu de {old_price}. Commandez-le sur {link}",
+            "Les bonnes affaires, c'est chez Maroc Telecom ! Profitez du {model} à partir de {price}. Commandez-le sur {link}",
             "Passez à la vitesse supérieure avec Maroc Telecom ! Découvrez le {model} {capacity} à seulement {price}. Plus d'infos sur {link}",
             "Offre Spéciale Maroc Telecom : Le {model} est à un prix exceptionnel. Idéal pour WhatsApp et vos applis préférées. {link}",
-            "Pour votre premier smartphone, choisissez la fiabilité Samsung. Le Galaxy {model} est à {price} avec {bonus_data} offerts par Maroc Telecom. {link}",
+            "Pour votre premier smartphone, choisissez la fiabilité Samsung. Le Galaxy {model} est à {price} offerts par Maroc Telecom. {link}",
             "Simplifiez-vous la vie avec le {model} de Maroc Telecom. Accédez à tous vos services en ligne pour seulement {price}. Livraison gratuite sur {link}"
         ],
         ("OPPORTUNITE_Achat_Equipement","OPPORTUNITE_AchatSmartphone","HONOR"): [
             "Les bonnes affaires continuent chez Maroc Telecom ! Le {model} {capacity} à {price} avec livraison gratuite. Commandez dès maintenant sur {link}",
             "Un smartphone performant et accessible : le {model} à {price}, recommandé par Maroc Telecom. Parfait pour débuter en 4G. {link}",
-            "Maroc Telecom vous offre {bonus_data}/mois pendant 3 mois à l'achat d'un Pack Smartphone HONOR à partir de {price}. Rendez-vous en agence.",
             "Offre imbattable chez Maroc Telecom sur le {model} : {price} avec 3 mois de Pass Réseaux Sociaux offerts. Plus d'infos sur {link}",
             "Découvrez la performance HONOR à petit prix avec Maroc Telecom. Le {model} {capacity} est à {price}. Commandez-le sur {link}"
         ],
         ("OPPORTUNITE_Achat_Equipement","OPPORTUNITE_AchatSmartphone","OPPO"): [
             "Les bonnes affaires continuent chez Maroc Telecom ! Le {model} {capacity} à {price} avec livraison gratuite. Commandez dès maintenant sur {link}",
             "Un smartphone performant et accessible : le {model} à {price}, recommandé par Maroc Telecom. Parfait pour débuter en 4G. {link}",
-            "Maroc Telecom vous offre {bonus_data}/mois pendant 3 mois à l'achat d'un Pack Smartphone OPPO à partir de {price}. Rendez-vous en agence.",
             "Offre imbattable chez Maroc Telecom sur le {model} : {price} avec 3 mois de Pass Réseaux Sociaux offerts. Plus d'infos sur {link}",
             "Découvrez la performance OPPO à petit prix avec Maroc Telecom. Le {model} {capacity} est à {price}. Commandez-le sur {link}"
         ],
         ("OPPORTUNITE_Achat_Equipement","OPPORTUNITE_AchatSmartphone","TECNO"): [
             "Les bonnes affaires continuent chez Maroc Telecom ! Le {model} {capacity} à {price} avec livraison gratuite. Commandez dès maintenant sur {link}",
             "Un smartphone performant et accessible : le {model} à {price}, recommandé par Maroc Telecom. Parfait pour débuter en 4G. {link}",
-            "Maroc Telecom vous offre {bonus_data} par mois pendant 3 mois à l'achat d'un Pack Smartphone TECNO à partir de {price}. Rendez-vous en agence.",
             "Offre imbattable chez Maroc Telecom sur le {model} : {price} avec 3 mois de Pass Réseaux Sociaux offerts. Plus d'infos sur {link}",
             "Découvrez la performance TECNO à petit prix avec Maroc Telecom. Le {model} {capacity} est à {price}. Commandez-le sur {link}"
         ],
@@ -1274,7 +1271,6 @@ def mock_llm(llm_input: Dict) -> str:
         ("USAGE_Internet","PROFIL_ReseauxSociaux","*6"): [
             "Vos stories n'attendent pas ! Avec le Pass Réseaux Sociaux de Maroc Telecom, partagez sans compter sur TikTok et Instagram. {volume} pour {price}. Composez {cta}.",
             "Restez connecté à vos communautés avec Maroc Telecom ! Le Pass {cta} vous donne {volume} pour {price}. Composez {cta} pour l'activer.",
-            "Exclusif Social Media Addict ! Pour votre prochaine recharge Pass {cta}, Maroc Telecom vous offre un bonus de {bonus_volume} valable sur YouTube. Rechargez sur {link}",
             "Ne manquez plus aucune notification. Le Pass {cta} de Maroc Telecom est maintenant valable {validity} pour {price}. Composez {cta} pour activer.",
             "Partagez sans limites avec Maroc Telecom ! Le Pass {offer_name} vous donne {volume} sur vos réseaux préférés. Composez {cta} pour seulement {price}."
         ],
@@ -1296,7 +1292,6 @@ def mock_llm(llm_input: Dict) -> str:
             "Maîtrisez votre budget avec Maroc Telecom ! Avec le Pass {cta}, profitez de {minutes} d'appels OU {volume} de data pour seulement {price}. Composez {cta}.",
             "Chaque dirham compte. Maroc Telecom vous propose ses offres à {price} : {minutes} d'appels ou {volume} de réseaux sociaux. Composez {cta}.",
             "Nouveau chez Maroc Telecom ! Le Pass {cta} de {price} vous donne maintenant {minutes} + {volume}. Plus de valeur pour le même prix. Composez {cta}.",
-            "Pour votre budget, chaque recharge est importante. Profitez de la recharge x15 de {price} et obtenez {bonus_credit} de bonus avec Maroc Telecom. Composez {cta}.",
             "Continuez à communiquer sans vous ruiner. Maroc Telecom vous propose le Pass {cta} : {minutes} ou {volume} à {price}. Composez {cta}."
         ],
         ("USAGE_Mixte","PROFIL_Flexible","*5"): [
@@ -1304,7 +1299,7 @@ def mock_llm(llm_input: Dict) -> str:
             "Pour vos besoins variés, Maroc Telecom vous recommande le Pass *2. Profitez du meilleur des deux mondes pour {price}. Composez {cta}.",
             "Votre style de communication est unique. Avec le service Switch de Maroc Telecom, convertissez votre crédit selon vos envies. Composez {cta}.",
             "Un imprévu ? Avec le Pass {cta} de Maroc Telecom, votre recharge n'est jamais perdue. {minutes} ou {volume} pour {price}. Composez {cta}.",
-            "En tant qu'utilisateur flexible, Maroc Telecom vous offre un bonus de 10% de crédit en plus sur le Pass {cta}. Composez {cta}."
+            "En tant qu'utilisateur flexible, Maroc Telecom vous offre un bonus de 10%' de crédit en plus sur le Pass {cta}. Composez {cta}."
         ],
         ("USAGE_Mixte","PROFIL_Professionnel","Forfait_Business"): [
             "Concentrez-vous sur votre métier, Maroc Telecom s'occupe du reste. Passez à un forfait Business et recevez une seule facture. Plus d'infos sur {link}",
