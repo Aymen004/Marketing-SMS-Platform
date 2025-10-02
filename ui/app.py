@@ -15,58 +15,6 @@ import pandas as pd
 import requests
 import streamlit as st
 
-# ---------- Backend warm-up & resilient HTTP utilities ----------
-from requests import Response, RequestException
-
-def warm_up_backend(base_url: str, attempts: int = 6, delay: float = 2.5) -> tuple[bool, str]:
-    """Proactively ping FastAPI /health to wake Render dyno.
-
-    Returns (ready, message). Tries a few times with backoff.
-    """
-    if not base_url:
-        return False, "No API_BASE_URL configured"
-    base_url = base_url.rstrip('/')
-    health_url = f"{base_url}/health"
-    last_err: str = ""
-    for i in range(1, attempts + 1):
-        try:
-            r: Response = requests.get(health_url, timeout=5)
-            if r.status_code == 200:
-                return True, "Compose API is awake"
-            last_err = f"HTTP {r.status_code}"
-        except RequestException as e:  # network / DNS / timeout
-            last_err = str(e)
-        time.sleep(delay if i == 1 else min(delay * (1.4 ** (i - 1)), 10))
-    return False, f"Compose API not reachable after {attempts} attempts: {last_err}"
-
-def post_with_retries(url: str, json_payload: dict, retries: int = 3, initial_delay: float = 1.5) -> Response:
-    """POST with retry on transient 5xx / connection errors.
-    Exponential backoff capped at ~8s.
-    """
-    attempt = 0
-    delay = initial_delay
-    last_exc: Exception | None = None
-    while attempt <= retries:
-        try:
-            resp = requests.post(url, json=json_payload, timeout=20)
-            if resp.status_code >= 500 and attempt < retries:
-                attempt += 1
-                time.sleep(delay)
-                delay = min(delay * 2, 8)
-                continue
-            return resp
-        except RequestException as e:
-            last_exc = e
-            if attempt == retries:
-                raise
-            attempt += 1
-            time.sleep(delay)
-            delay = min(delay * 2, 8)
-    # If loop exits unexpectedly
-    if last_exc:
-        raise last_exc
-    raise RuntimeError("post_with_retries failed without explicit exception")
-
 API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_BOT_USERNAME = os.getenv("TELEGRAM_BOT_USERNAME") or "IAMistralbot"
@@ -227,17 +175,6 @@ if TELEGRAM_BOT_USERNAME == "IAMistralbot" and TELEGRAM_BOT_TOKEN:
         TELEGRAM_BOT_USERNAME = "IAMistralbot"
 
 st.set_page_config(page_title="IAM Marketing Platform", page_icon="📡", layout="wide")
-
-# Run backend warm-up once per session
-if 'compose_ready' not in st.session_state:
-    with st.spinner('Waking compose backend (Render cold start)...'):
-        ready, msg = warm_up_backend(API_BASE_URL)
-    st.session_state['compose_ready'] = ready
-    st.session_state['compose_warmup_msg'] = msg
-    if ready:
-        st.toast('Compose API ready ✅', icon='✅')
-    else:
-        st.warning(f"{msg}. You can still try to generate; retries are enabled.")
 
 if "LIVE_LLM_URL" not in st.session_state and LIVE_LLM_URL and LIVE_LLM_URL.strip():
     st.session_state["LIVE_LLM_URL"] = LIVE_LLM_URL.strip()
@@ -620,6 +557,7 @@ body {
   cursor: pointer !important;
   position: relative !important;
   overflow: hidden !important;
+  color: white !important;  /* Force white text for visibility in light mode */
 }
 
 .stRadio > div > label::before {
@@ -946,6 +884,48 @@ body {
   }
 }
 
+/* ------ FORCE DARK MODE REGARDLESS OF BROWSER THEME ------ */
+html, body, .stApp {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  color-scheme: dark !important;
+}
+
+/* Override Streamlit header/app bar */
+.stHeader, .stAppHeader, [data-testid="stHeader"], [data-testid="stAppHeader"] {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  border-bottom: 1px solid var(--border-light) !important;
+}
+
+/* Override any Streamlit light mode styles */
+.stApp > div > div > div > div {
+  background: var(--bg-primary) !important;
+}
+
+/* Force labels and text to be visible in light mode */
+label, .stSelectbox label, .stRadio label, .stTextInput label, .stMarkdown p, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
+  color: var(--text-primary) !important;
+}
+
+/* Force radio button option text to be white */
+.stRadio > div > label > div {
+  color: white !important;
+}
+
+.stRadio > div > label > div > div {
+  color: white !important;
+}
+
+.stRadio > div > label span {
+  color: white !important;
+}
+
+/* Ensure select and input text is white */
+.stSelectbox [data-baseweb="select"] span, .stTextInput input {
+  color: var(--text-primary) !important;
+}
+
 /* ------ STREAMLIT OVERRIDES ------ */
 .stMarkdown { margin-bottom: 0 !important; }
 .element-container { margin: 0 !important; }
@@ -1093,20 +1073,8 @@ def call_compose(selection: Selection) -> Dict:
             "famille": selection.famille,
             "tag_offre": selection.value,
         }
-    url = f"{API_BASE_URL.rstrip('/')}{endpoint}"
-    # If backend not warmed earlier, try a quick opportunistic warm-up
-    if not st.session_state.get('compose_ready'):
-        warm_up_backend(API_BASE_URL, attempts=2, delay=1)
-    response = post_with_retries(url, payload, retries=3)
-    try:
-        response.raise_for_status()
-    except Exception as e:
-        # Provide richer context for common 502 / 504
-        if response.status_code in (502, 503, 504):
-            raise RuntimeError(
-                f"Compose API transient error ({response.status_code}). The backend may still be waking. Please retry."
-            ) from e
-        raise
+    response = requests.post(f"{API_BASE_URL}{endpoint}", json=payload, timeout=15)
+    response.raise_for_status()
     return response.json()
 
 def mock_llm(llm_input: Dict) -> str:
@@ -1811,7 +1779,7 @@ with col2:
             user_base_raw = st.text_input(
                 "Paste vLLM URL (ngrok) you got from colab",
                 value=stored_url,
-                placeholder="https://xxxx-xx-xx-xx.ngrok-free.app",
+                placeholder="https://xxxx-xx-xx.ngrok-free.dev",
             )
         with col_b:
             st.text_input(
