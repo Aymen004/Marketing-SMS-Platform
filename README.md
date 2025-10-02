@@ -77,7 +77,6 @@ Copy `.env.example` to `.env` .
 | `LIVE_LLM_API_KEY` | Streamlit | API key for live LLM if required |
 | `TELEGRAM_BOT_TOKEN` | Streamlit | Bot token for sending SMS |
 | `SEGMENTATION_PATH` | Both | Path to segmentation CSV |
-
 ---
 ## Customer Segmentation (PySpark + Airflow)
 A PySpark data processing job (prototype DAG in Airflow) ingests raw telecom usage KPIs (data volume tiers, voice minute distributions, SMS counts, roaming events, handset metadata) and:
