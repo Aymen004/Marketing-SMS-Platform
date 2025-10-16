@@ -14,6 +14,10 @@ from urllib.parse import urlparse
 import pandas as pd
 import requests
 import streamlit as st
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
@@ -1434,31 +1438,38 @@ def live_llm(
     model_id: str = DEFAULT_LIVE_LLM_MODEL_ID,
 ) -> str:
     system_prompt = (
-        "Tu es un rédacteur sms marketing pour Maroc Telecom (IAM). À partir de l’INPUT JSON fourni (profil_client, offer_context, promo_context, cta, deadline, links),  écris UN SEUL SMS promotionnel en français en respectant STRICTEMENT : 1) ≤ 480 caractères ; 2) n’utiliser QUE les chiffres/prix/volumes/durées/destinations présents dans l’input ; 3) Termine TOUJOURS par un appel à l'action clair (code USSD , lien) ;5) tonalité fluide , naturelle et percutante ; 6) Le message ne doit contenir AUCUNE NOTE ; 7)Réponds SEULEMENT en français ; 8) Ne mentionne pas le nom du persona"
+        "Tu es un rédacteur sms marketing pour Maroc Telecom (IAM). À partir de l’INPUT JSON fourni (profil_client, offer_context, promo_context, cta, deadline, links),  écris UN SEUL SMS promotionnel en français en respectant STRICTEMENT : 1) ≤ 480 caractères ; 2) n’utiliser QUE les chiffres/prix/volumes/durées/destinations présents dans l’input ; 3) Termine TOUJOURS par un appel à l'action clair ('links' ou 'cta') ;5) tonalité fluide , naturelle et percutante"
     )
-    headers = {"Content-Type": "application/json"}
-    if api_key:
-        headers["Authorization"] = f"Bearer {api_key}"
-
-    payload = {
-        "model": model_id,
-        "messages": [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": json.dumps(llm_input, ensure_ascii=False)},
-        ],
-        "temperature": 0.8,
-        "top_p": 0.9,
-        "max_tokens": 140,
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
     }
-    response = requests.post(
-        f"{base_url.rstrip('/')}/v1/chat/completions",
-        headers=headers,
-        json=payload,
-        timeout=45,
-    )
+
+    # Prepare messages
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": json.dumps(llm_input, ensure_ascii=False)}
+    ]
+    
+    # Request body with OpenRouter model
+    payload = {
+        "model": "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
+        "messages": messages,
+        "max_tokens": 200,
+        "temperature": 0.7,
+        "top_p": 0.9
+    }
+    # OpenRouter API endpoint
+    url = "https://openrouter.ai/api/v1/chat/completions"
+    
+    # Make the API call to OpenRouter
+    response = requests.post(url, headers=headers, json=payload, timeout=45)
     response.raise_for_status()
-    data = response.json()
-    return data["choices"][0]["message"]["content"]
+    
+    result = response.json()
+    generated_sms = result["choices"][0]["message"]["content"].strip()
+    
+    return generated_sms
 
 def fetch_latest_chat_id(token: Optional[str]) -> Tuple[bool, str]:
     token = token or TELEGRAM_BOT_TOKEN
@@ -1766,57 +1777,7 @@ with col2:
         unsafe_allow_html=True,
     )
 
-    if llm_mode == "Live inference":
-        st.link_button(
-            "🧪 Open Colab notebook (run all, get ngrok URL)",
-            "https://colab.research.google.com/drive/156lcy9KyfdHSoz0U8-Wde_gDf_uC3Qkp?usp=sharing",
-            use_container_width=True,
-        )
-        col_a, col_b = st.columns([2, 1])
-        stored_url = st.session_state.get("LIVE_LLM_URL", "")
-        stored_model = st.session_state.get("LIVE_LLM_MODEL_ID", DEFAULT_LIVE_LLM_MODEL_ID)
-        with col_a:
-            user_base_raw = st.text_input(
-                "Paste vLLM URL (ngrok) you got from colab",
-                value=stored_url,
-                placeholder="https://xxxx-xx-xx.ngrok-free.dev",
-            )
-        with col_b:
-            st.text_input(
-                "Model id",
-                value=stored_model,
-                disabled=True,
-                help="Finetuned marketing SMS expert model ",
-            )
-        model_id_ui = stored_model
-
-        validate_clicked = st.button("Validate endpoint")
-        if validate_clicked:
-            normalized = (user_base_raw or "").strip()
-            if not normalized:
-                st.warning("Paste the public base URL before validating.")
-            else:
-                normalized = normalized.rstrip("/")
-                parsed = urlparse(normalized)
-                if parsed.scheme not in ("http", "https"):
-                    st.warning("Only http(s) URLs are supported.")
-                elif parsed.netloc and "ngrok" not in parsed.netloc.lower():
-                    st.warning("The URL should be an ngrok public base.")
-                else:
-                    try:
-                        health_resp = requests.get(f"{normalized}/health", timeout=10)
-                        health_resp.raise_for_status()
-                        models_resp = requests.get(f"{normalized}/v1/models", timeout=10)
-                        models_resp.raise_for_status()
-                        models_json = models_resp.json()
-                        first_model = models_json.get("data", [{}])[0].get("id", "unknown")
-                        session_model = (model_id_ui or DEFAULT_LIVE_LLM_MODEL_ID).strip() or DEFAULT_LIVE_LLM_MODEL_ID
-                        st.session_state["LIVE_LLM_URL"] = normalized
-                        st.session_state["LIVE_LLM_MODEL_ID"] = session_model
-                        LIVE_LLM_URL = normalized
-                        st.success(f"Connected to vLLM endpoint . LLM used : {first_model} ")
-                    except Exception as exc:
-                        st.error(f"Validation failed: {exc}")
+    # No additional UI elements for Live inference - keeping it clean like Mock mode
 
     # Placeholder that we will mutate (ready -> fetching -> success -> ready) without rerun
     btn_placeholder = st.empty()
@@ -1847,21 +1808,42 @@ with col2:
 
 
     def render_fetching():
+        # Show different messages and styles based on llm_mode
+        if llm_mode == 'Live inference':
+            # Purple gradient for Live inference (AI generation)
+            message = "✨ Mistral finetuned LLM is generating your custom marketing SMS..."
+            gradient = "linear-gradient(135deg,#6366f1,#8b5cf6)"
+            shadow = "0 12px 36px rgba(99,102,241,.45)"
+            glow_animation = "fetchingGlowPurple"
+            glow_keyframes = "@keyframes fetchingGlowPurple{0%,100%{box-shadow:0 12px 32px rgba(99,102,241,.35);}50%{box-shadow:0 18px 42px rgba(139,92,246,.55);}}"
+            pulse_animation = "fetchingPulsePurple"
+        else:
+            # Blue gradient for Mock mode (RAG fetching)
+            message = "🔍 Qdrant RAG is fetching Maroc Telecom catalogs..."
+            gradient = "linear-gradient(135deg,#0ea5e9,#3b82f6)"
+            shadow = "0 12px 36px rgba(14,165,233,.45)"
+            glow_animation = "fetchingGlowBlue"
+            glow_keyframes = "@keyframes fetchingGlowBlue{0%,100%{box-shadow:0 12px 32px rgba(14,165,233,.35);}50%{box-shadow:0 18px 42px rgba(59,130,246,.55);}}"
+            pulse_animation = "fetchingPulseBlue"
+        
         btn_placeholder.markdown(
-            """
-            <div style='width:100%; padding:16px 24px; border:none; border-radius:14px;
-                background:linear-gradient(135deg,#1a70ff,#4a94ff); color:#fff; font-weight:600; font-size:15px;
-                box-shadow:0 8px 32px rgba(26,112,255,.45); position:relative; overflow:hidden;'
+            f"""
+            <div style='width:100%; padding:18px 26px; border:none; border-radius:14px;
+                background:{gradient}; color:#fff; font-weight:600; font-size:15px;
+                box-shadow:{shadow}; position:relative; overflow:hidden;'
                 id='fetching-tile'>
-                <div style='display:flex; align-items:center; justify-content:center; gap:12px;'>
-                    <div style='width:22px;height:22px;border:3px solid rgba(255,255,255,0.35);border-top:3px solid #fff;border-radius:50%;animation:spin 1s linear infinite'></div>
-                    <span>🔍 Qdrant RAG fetching Maroc Telecom catalogs...</span>
+                <div style='display:flex; align-items:center; justify-content:center; gap:14px;'>
+                    <div style='position:relative;width:24px;height:24px;'>
+                        <div style='width:24px;height:24px;border-radius:50%;border:3px solid rgba(255,255,255,0.35);'></div>
+                        <div style='position:absolute;top:-6px;left:-6px;width:36px;height:36px;border-radius:50%;border:3px solid rgba(255,255,255,0.18);animation:{pulse_animation} 1.8s ease-in-out infinite;'></div>
+                    </div>
+                    <span>{message}</span>
                 </div>
             </div>
             <style>
-              #fetching-tile{animation:fetchingPulse 2s ease-in-out infinite}
-              @keyframes fetchingPulse{0%,100%{transform:scale(1.00)}50%{transform:scale(1.03)}}
-              @keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+              #fetching-tile{{animation:{glow_animation} 2.4s ease-in-out infinite}}
+              {glow_keyframes}
+              @keyframes {pulse_animation}{{0%,100%{{transform:scale(0.9);opacity:0.55;}}50%{{transform:scale(1.05);opacity:1;}}}}
             </style>
             """,
             unsafe_allow_html=True,
@@ -1964,11 +1946,8 @@ with col2:
                 st.session_state['gen_ui_state'] = 'ready'
                 render_ready()
             else:
-                rag_start = _t.time()
+                # Fetch catalog data from RAG
                 compose_response = call_compose(selection)
-                rag_elapsed = _t.time() - rag_start
-                if rag_elapsed < 1.0:
-                    _t.sleep(1.0 - rag_elapsed)
                 payload_raw = compose_response.get("llm_input_json")
                 if not payload_raw:
                     raise ValueError("Compose payload missing llm_input_json")
@@ -1980,20 +1959,21 @@ with col2:
                     offer_ctx = payload.setdefault("offer_context", {})
                     offer_ctx.setdefault("marque", brand_value)
                 st.session_state['llm_input'] = payload
-                live_url = (st.session_state.get("LIVE_LLM_URL") or LIVE_LLM_URL or "").strip()
+                live_api_key = os.getenv('LIVE_LLM_API_KEY') or LIVE_LLM_API_KEY
                 live_model_id = st.session_state.get("LIVE_LLM_MODEL_ID") or DEFAULT_LIVE_LLM_MODEL_ID
-                if llm_mode == 'Live inference' and live_url:
-                    st.session_state['gen_ui_state'] = 'llm_generating'
-                    render_llm_generating()
-                    _t.sleep(0.3)
+                
+                if llm_mode == 'Live inference':
+                    # Use OpenRouter API for live inference
                     sms_text = live_llm(
                         payload,
-                        live_url,
-                        os.getenv('LLM_API_KEY') or LIVE_LLM_API_KEY,
+                        "",  # base_url not needed for OpenRouter
+                        live_api_key,
                         live_model_id,
                     )
                 else:
+                    # Use mock templates
                     sms_text = mock_llm(payload)
+                
                 st.session_state['sms_text'] = sms_text
                 st.session_state['gen_ui_state'] = 'success'
                 render_success()
