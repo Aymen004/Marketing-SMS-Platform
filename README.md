@@ -10,7 +10,7 @@ This project showcases an end-to-end marketing pipeline prototype:
 - Transforms raw segmentation + product catalogs into high-conversion contextual SMS.
 - Uses Qdrant-powered semantic retrieval to surface the most relevant offer or device for a customer usage profile.
 - Leverages a 4-bit quantized, finetuned Mistral-7B-Instruct-v0.2 model trained on prior Maroc Telecom promotional messages (style, tone, constraints).
-- Supports both mock deterministic templates (fast iteration) and live inference (Colab/ngrok → vLLM serving).
+- Supports both mock deterministic templates (fast iteration) and live inference (Remotely hosted GPU).
 - Includes a production-minded automation design (PySpark segmentation → Airflow scheduling → RAG enrichment → LLM generation → Telegram API delivery → scalable orchestration via n8n).
 - Deployed Streamlit UI (public demo): https://streamlit-ui-mgwb.onrender.com
 
@@ -21,19 +21,19 @@ This project showcases an end-to-end marketing pipeline prototype:
    |    Browser    |    --->  |    Streamlit UI   |  --->   | FastAPI Compose API|
    +---------------+          +---------+---------+         +---------+----------+
                                           |                             |
-                                          | (Qdrant client + CSV)       |
+                                          | (Qdrant client)             |
                                           v                             v
-                                   +-------------+               +-------------+
-                                   |  Qdrant     |               |  LLM (mock  |
-                                   |  (cloud)    |               |  or vLLM)   |
-                                   +-------------+               +-------------+
+                                   +-------------+               +--------------------+
+                                   |  Qdrant     |               |  LLM (mock         |
+                                   |  (cloud)    |               |  or GPU inference) |
+                                   +-------------+               +--------------------+
 ```
 - **Streamlit UI** (`ui/app.py`): User workflow, persona selection, generation states, preview & Telegram send.
-- **FastAPI** (`app/main.py` + `service.py` + `catalog.py`): RAG style composition: loads CSV catalogs & (optionally) queries Qdrant collections (`offres`, `smartphones`). Returns `llm_input_json`.
-- **Qdrant**: Optional vector recall for offers/handsets (provide `QDRANT_URL` & key).
+- **FastAPI** (`app/main.py` + `service.py` + `catalog.py`): RAG style composition: loads CSV catalogs and queries Qdrant collections (`offres`, `smartphones`). Returns `llm_input_json`.
+- **Qdrant**: Vector recall for offers/handsets (provide `QDRANT_URL` & key).
 - **LLM modes**: 
   - `Mock`: deterministic template rotation (fast preview).
-  - `Live inference`: user supplies a public (ngrok) base to a Colab-hosted vLLM server. UI validates `/health` & `/v1/models`.
+  - `Live inference`: Live inference using finetuned Mistral model with HuggingFace inference endpoint (Cloud GPU).
 
 ---
 ## Key Features
@@ -70,7 +70,6 @@ Copy `.env.example` to `.env` .
 | `QDRANT_OFFRES_COLLECTION` | FastAPI | Offer collection name |
 | `QDRANT_SMARTPHONES_COLLECTION` | FastAPI | Handset collection name |
 | `LLM_BASE_URL` | FastAPI | (Optional) internal LLM service (if not using ngrok UI path) |
-| `LLM_API_KEY` | FastAPI/UI | Bearer token for LLM if required |
 | `API_BASE_URL` | Streamlit | Public FastAPI compose base URL |
 | `LLM_MODE` | Streamlit | Default mode (`Mock` or `Live inference`) |
 | `LIVE_LLM_URL` | Streamlit | Pre-seeded live vLLM base (optional) |
@@ -105,8 +104,7 @@ Core intelligence layer:
 - Composition: FastAPI service merges segmentation record + retrieved offer context → structured `llm_input_json`.
 - Generation: Two modes  
   - Mock rotation (deterministic, zero cost)  
-  - Live inference: Finetuned Mistral-7B-Instruct-v0.2 via vLLM (4-bit quantized for fast, memory‑efficient serving)
-- Guardrails: Character limit enforcement, numeric fidelity (only values present in context), CTA inclusion.
+  - Live inference: Finetuned Mistral-7B-Instruct-v0.2 via HuggingFace endpoint (4-bit quantized for cost efficiency).
 
 ## Finetuning & Optimization
 - Base model: Mistral-7B-Instruct-v0.2
@@ -128,7 +126,7 @@ Segmentation (PySpark) → Orchestrated (Airflow) → FastAPI Compose (RAG + cat
 
 
 ## Automated Pipeline n8n Prototype 
-A production-oriented orchestration prototype (n8n + Airflow) was used in production:
+An automated orchestration prototype (n8n + Airflow) was used in production :
 1. Batch customer clustering / segmentation (PySpark jobs)
 2. Scheduled via Airflow (daily audience refresh)
 3. n8n workflow calls Compose API (RAG enrichment for offers/handsets)
