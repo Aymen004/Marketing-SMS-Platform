@@ -5,7 +5,7 @@ set -o nounset
 set -o pipefail
 
 STREAMLIT_HOST="0.0.0.0"
-STREAMLIT_PORT="${PORT:-8501}"
+STREAMLIT_PORT="8501"
 
 export STREAMLIT_SERVER_HEADLESS="true"
 export STREAMLIT_SERVER_ADDRESS="$STREAMLIT_HOST"
@@ -24,5 +24,5 @@ cleanup() {
 
 trap cleanup TERM INT EXIT
 
-echo "Starting Streamlit UI on port $STREAMLIT_PORT (Render will expose this port)."
+echo "Starting Streamlit UI on port $STREAMLIT_PORT "
 streamlit run ui/app.py
