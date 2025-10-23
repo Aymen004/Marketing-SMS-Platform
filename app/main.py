@@ -13,7 +13,6 @@ from .models import (
     ComposeOffrePayload,
     ComposeResponse,
     ComposeSmartphonePayload,
-    HealthResponse,
 )
 from .service import ComposeService, to_llm_response
 
@@ -48,13 +47,10 @@ def get_service() -> ComposeService:
 ServiceDep = Annotated[ComposeService, Depends(get_service)]
 
 
-@app.get("/health", response_model=HealthResponse)
-def health(service: ServiceDep) -> HealthResponse:
-    status = "ok"
-    qdrant_status = "offline"
-    if service.qdrant:
-        qdrant_status = "connected"
-    return HealthResponse(status=status, qdrant=qdrant_status, catalog_version=service.catalog.version)
+@app.get("/")
+def root():
+    """Root endpoint for wake-up requests."""
+    return {"message": "Backend is awake"}
 
 
 @app.post("/compose/offre", response_model=ComposeResponse)

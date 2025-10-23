@@ -182,20 +182,16 @@ st.set_page_config(page_title="IAM Marketing Platform", page_icon="📡", layout
 
 # Function to wake up Render backend
 def wake_up_backend():
-    """Wake up the Render backend by calling health endpoint."""
+    """Wake up the Render backend by calling the root endpoint."""
     try:
-        health_url = f"{API_BASE_URL}/health"
-        response = requests.get(health_url, timeout=5)
-        if response.status_code == 200:
-            return True
-    except Exception:
-        pass
-    return False
+        response = requests.get(f"{API_BASE_URL}/", timeout=5)
+        response.raise_for_status()
+    except requests.RequestException:
+        pass  # Ignore errors to avoid disrupting app load
 
-# Wake up backend when app loads
+# Wake up backend once per session
 if "backend_woken" not in st.session_state:
-    with st.spinner("Waking up backend service..."):
-        wake_up_backend()
+    wake_up_backend()
     st.session_state["backend_woken"] = True
 
 if "LIVE_LLM_URL" not in st.session_state and LIVE_LLM_URL and LIVE_LLM_URL.strip():
