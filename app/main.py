@@ -1,10 +1,11 @@
 """FastAPI application entrypoint."""
 from __future__ import annotations
 
+import logging
 from functools import lru_cache
 from typing import Annotated
 
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from .catalog import load_catalog
@@ -15,6 +16,8 @@ from .models import (
     ComposeSmartphonePayload,
 )
 from .service import ComposeService, to_llm_response
+
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="IAM Compose API",
@@ -48,8 +51,9 @@ ServiceDep = Annotated[ComposeService, Depends(get_service)]
 
 
 @app.get("/")
-def root():
-    """Root endpoint for wake-up requests."""
+async def root(request: Request):
+    logger.info(f"Wake-up request from {request.client.host}")
+    logger.info(f"Headers: {dict(request.headers)}")
     return {"message": "Backend is awake"}
 
 

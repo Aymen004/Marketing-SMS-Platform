@@ -189,11 +189,6 @@ def wake_up_backend():
     except requests.RequestException:
         pass  # Ignore errors to avoid disrupting app load
 
-# Wake up backend once per session
-if "backend_woken" not in st.session_state:
-    wake_up_backend()
-    st.session_state["backend_woken"] = True
-
 if "LIVE_LLM_URL" not in st.session_state and LIVE_LLM_URL and LIVE_LLM_URL.strip():
     st.session_state["LIVE_LLM_URL"] = LIVE_LLM_URL.strip()
 if "LIVE_LLM_MODEL_ID" not in st.session_state:
@@ -1955,6 +1950,11 @@ with col2:
         render_fetching()
         import time as _t
         try:
+            # Wake up backend once per session when generating SMS
+            if "backend_woken" not in st.session_state:
+                wake_up_backend()
+                st.session_state["backend_woken"] = True
+            
             if not selection:
                 st.warning("⚠️ Select a usage type and persona before generating.")
                 st.session_state['gen_ui_state'] = 'ready'
