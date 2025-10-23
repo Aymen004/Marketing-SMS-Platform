@@ -1,12 +1,10 @@
 """FastAPI application entrypoint."""
 from __future__ import annotations
 
-import logging
 from functools import lru_cache
 from typing import Annotated
 
-from fastapi import Depends, FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Depends, FastAPI
 
 from .catalog import load_catalog
 from .config import settings
@@ -14,24 +12,14 @@ from .models import (
     ComposeOffrePayload,
     ComposeResponse,
     ComposeSmartphonePayload,
+    HealthResponse,
 )
 from .service import ComposeService, to_llm_response
-
-logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="IAM Compose API",
     description="Segmentation -> RAG -> LLM payload composer",
     version="0.2.0",
-)
-
-# Add CORS middleware to allow requests from Streamlit Cloud
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins for now (can be restricted to specific Streamlit Cloud URLs)
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
 )
 
 
@@ -50,11 +38,13 @@ def get_service() -> ComposeService:
 ServiceDep = Annotated[ComposeService, Depends(get_service)]
 
 
-@app.get("/")
-async def root(request: Request):
-    logger.info(f"Wake-up request from {request.client.host}")
-    logger.info(f"Headers: {dict(request.headers)}")
-    return {"message": "Backend is awake"}
+@app.get("/health", response_model=HealthResponse)
+def health(service: ServiceDep) -> HealthResponse:
+    status = "ok"
+    qdrant_status = "offline"
+    if service.qdrant:
+        qdrant_status = "connected"
+    return HealthResponse(status=status, qdrant=qdrant_status, catalog_version=service.catalog.version)
 
 
 @app.post("/compose/offre", response_model=ComposeResponse)

@@ -180,15 +180,6 @@ if TELEGRAM_BOT_USERNAME == "IAMistralbot" and TELEGRAM_BOT_TOKEN:
 
 st.set_page_config(page_title="IAM Marketing Platform", page_icon="📡", layout="wide")
 
-# Function to wake up Render backend
-def wake_up_backend():
-    """Wake up the Render backend by calling the root endpoint."""
-    try:
-        response = requests.get(f"{API_BASE_URL}/", timeout=5)
-        response.raise_for_status()
-    except requests.RequestException:
-        pass  # Ignore errors to avoid disrupting app load
-
 if "LIVE_LLM_URL" not in st.session_state and LIVE_LLM_URL and LIVE_LLM_URL.strip():
     st.session_state["LIVE_LLM_URL"] = LIVE_LLM_URL.strip()
 if "LIVE_LLM_MODEL_ID" not in st.session_state:
@@ -1950,31 +1941,13 @@ with col2:
         render_fetching()
         import time as _t
         try:
-            # Wake up backend once per session when generating SMS
-            if "backend_woken" not in st.session_state:
-                wake_up_backend()
-                st.session_state["backend_woken"] = True
-            
             if not selection:
                 st.warning("⚠️ Select a usage type and persona before generating.")
                 st.session_state['gen_ui_state'] = 'ready'
                 render_ready()
             else:
                 # Fetch catalog data from RAG
-                try:
-                    compose_response = call_compose(selection)
-                except Exception as e:
-                    error_msg = str(e).lower()
-                    # Check if backend is sleeping (common Render free tier behavior)
-                    if "connection" in error_msg or "timeout" in error_msg or "502" in error_msg or "503" in error_msg:
-                        st.error("🚀 Backend service is waking up... Please wait 30 seconds and try generating again.")
-                        st.session_state['gen_ui_state'] = 'ready'
-                        render_ready()
-                        _t.sleep(1.0)  # Brief pause before continuing
-                        st.stop()  # Stop execution to prevent further processing
-                    else:
-                        raise e
-                
+                compose_response = call_compose(selection)
                 payload_raw = compose_response.get("llm_input_json")
                 if not payload_raw:
                     raise ValueError("Compose payload missing llm_input_json")
