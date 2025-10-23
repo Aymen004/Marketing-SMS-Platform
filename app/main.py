@@ -5,6 +5,7 @@ from functools import lru_cache
 from typing import Annotated
 
 from fastapi import Depends, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from .catalog import load_catalog
 from .config import settings
@@ -20,6 +21,15 @@ app = FastAPI(
     title="IAM Compose API",
     description="Segmentation -> RAG -> LLM payload composer",
     version="0.2.0",
+)
+
+# Add CORS middleware to allow requests from Streamlit Cloud
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins for now (can be restricted to specific Streamlit Cloud URLs)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 

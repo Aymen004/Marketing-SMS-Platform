@@ -180,6 +180,24 @@ if TELEGRAM_BOT_USERNAME == "IAMistralbot" and TELEGRAM_BOT_TOKEN:
 
 st.set_page_config(page_title="IAM Marketing Platform", page_icon="📡", layout="wide")
 
+# Function to wake up Render backend
+def wake_up_backend():
+    """Wake up the Render backend by calling health endpoint."""
+    try:
+        health_url = f"{API_BASE_URL}/health"
+        response = requests.get(health_url, timeout=5)
+        if response.status_code == 200:
+            return True
+    except Exception:
+        pass
+    return False
+
+# Wake up backend when app loads
+if "backend_woken" not in st.session_state:
+    with st.spinner("Waking up backend service..."):
+        wake_up_backend()
+    st.session_state["backend_woken"] = True
+
 if "LIVE_LLM_URL" not in st.session_state and LIVE_LLM_URL and LIVE_LLM_URL.strip():
     st.session_state["LIVE_LLM_URL"] = LIVE_LLM_URL.strip()
 if "LIVE_LLM_MODEL_ID" not in st.session_state:
@@ -1947,7 +1965,20 @@ with col2:
                 render_ready()
             else:
                 # Fetch catalog data from RAG
-                compose_response = call_compose(selection)
+                try:
+                    compose_response = call_compose(selection)
+                except Exception as e:
+                    error_msg = str(e).lower()
+                    # Check if backend is sleeping (common Render free tier behavior)
+                    if "connection" in error_msg or "timeout" in error_msg or "502" in error_msg or "503" in error_msg:
+                        st.error("🚀 Backend service is waking up... Please wait 30 seconds and try generating again.")
+                        st.session_state['gen_ui_state'] = 'ready'
+                        render_ready()
+                        _t.sleep(1.0)  # Brief pause before continuing
+                        st.stop()  # Stop execution to prevent further processing
+                    else:
+                        raise e
+                
                 payload_raw = compose_response.get("llm_input_json")
                 if not payload_raw:
                     raise ValueError("Compose payload missing llm_input_json")

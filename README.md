@@ -1,7 +1,7 @@
 # Marketing SMS Platform - RAG + Finetuned LLM - n8n automation
 
 Persona-driven, catalog-aware SMS campaign generation. This platform combines real customer usage segmentation, vector-based offer retrieval (Qdrant RAG), and a finetuned telecom-specialized LLM to produce compliant marketing SMS automatically. 
-[Streamlit Demo](https://streamlit-ui-mgwb.onrender.com)
+[Streamlit Demo](https://marketing-sms-platform.streamlit.app)
 
 https://github.com/user-attachments/assets/e798c2ae-42df-456e-a061-6835ea36304c
 
@@ -12,21 +12,59 @@ This project showcases an end-to-end marketing pipeline prototype:
 - Leverages a 4-bit quantized, finetuned Mistral-7B-Instruct-v0.2 model trained on prior Maroc Telecom promotional messages (style, tone, constraints).
 - Supports both mock deterministic templates (fast iteration) and live inference (Remotely hosted GPU).
 - Includes a production-minded automation design (PySpark segmentation → Airflow scheduling → RAG enrichment → LLM generation → Telegram API delivery → scalable orchestration via n8n).
-- Deployed Streamlit UI (public demo): https://streamlit-ui-mgwb.onrender.com
+- Deployed Streamlit UI (public demo): https://marketing-sms-platform.streamlit.app
 
 ---
 ## Architecture Overview
 ```
-   +---------------+          +-------------------+         +--------------------+
-   |    Browser    |    --->  |    Streamlit UI   |  --->   | FastAPI Compose API|
-   +---------------+          +---------+---------+         +---------+----------+
-                                          |                             |
-                                          | (Qdrant client)             |
-                                          v                             v
-                                   +-------------+               +--------------------+
-                                   |  Qdrant     |               |  LLM (mock         |
-                                   |  (cloud)    |               |  or GPU inference) |
-                                   +-------------+               +--------------------+
+1. User Interaction:
+   +-------------------+
+   |   Browser/User    |
+   | - Selects persona |
+   +---------+---------+
+             |
+             v
+2. Streamlit UI:
+   +-------------------+
+   |  Streamlit        |
+   | (ui/app.py)       |
+   | - Dropdowns       |
+   | - Calls FastAPI   |
+   +---------+---------+
+             |
+             v
+3. FastAPI Backend:
+   +-------------------+
+   | FastAPI           |
+   | (app/main.py)     |
+   | - Receives request|
+   | - Queries Qdrant  |
+   +---------+---------+
+             |
+             v
+4. Qdrant RAG:
+   +-------------------+
+   |     Qdrant        |
+   |   (Vector DB)     |
+   | - Semantic search |
+   | - Returns JSON    |
+   +---------+---------+
+             |
+             v
+5. LLM Generation:
+   +-------------------+     +-------------------+
+   | Finetuned LLM     |     |   Mock Mode       |
+   | (Mistral-7B)      |  OR |                   |
+   |  Generates SMS    |     |  (Templates)      |
+   +-------------------+     +-------------------+
+             |
+             v
+6. Result Display:
+   +-------------------+
+   |  Streamlit UI     |
+   | - SMS Preview     |
+   | - Telegram Send   |
+   +-------------------+
 ```
 - **Streamlit UI** (`ui/app.py`): User workflow, persona selection, generation states, preview & Telegram send.
 - **FastAPI** (`app/main.py` + `service.py` + `catalog.py`): RAG style composition: loads CSV catalogs and queries Qdrant collections (`offres`, `smartphones`). Returns `llm_input_json`.
@@ -121,7 +159,7 @@ Segmentation (PySpark) → Orchestrated (Airflow) → FastAPI Compose (RAG + cat
     → LLM Inference (finetuned Mistral) → SMS Preview (Streamlit) → Delivery (Telegram Bot)
 ```
 ## Live Demo
-- Streamlit UI (deployed): https://streamlit-ui-mgwb.onrender.com  
+- Streamlit UI (deployed):   
   Explore: persona selection → contextual insights → RAG JSON → generated SMS → send via Telegram.
 
 
