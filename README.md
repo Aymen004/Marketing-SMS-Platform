@@ -1,7 +1,7 @@
 # Marketing SMS Platform - RAG + Finetuned LLM - n8n automation
 
 Persona-driven, catalog-aware SMS campaign generation. This platform combines real customer usage segmentation, vector-based offer retrieval (Qdrant RAG), and a finetuned telecom-specialized LLM to produce compliant marketing SMS automatically. 
-[Streamlit Demo](https://streamlit-ui-mgwb.onrender.com) (You may 30s for Render service warm-up)
+[Streamlit Demo](https://streamlit-ui-mgwb.onrender.com) (You may wait 30s for Render service warm-up)
 
 https://github.com/user-attachments/assets/e798c2ae-42df-456e-a061-6835ea36304c
 
