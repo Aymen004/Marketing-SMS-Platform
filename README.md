@@ -1,7 +1,7 @@
 # Marketing SMS Platform - RAG + Finetuned LLM - n8n automation
 
 Persona-driven, catalog-aware SMS campaign generation. This platform combines real customer usage segmentation, vector-based offer retrieval (Qdrant RAG), and a finetuned telecom-specialized LLM to produce compliant marketing SMS automatically. 
-[Streamlit Demo](https://marketing-sms-platform.streamlit.app)
+[Streamlit Demo](https://streamlit-ui-mgwb.onrender.com)
 
 https://github.com/user-attachments/assets/e798c2ae-42df-456e-a061-6835ea36304c
 
@@ -12,7 +12,7 @@ This project showcases an end-to-end marketing pipeline prototype:
 - Leverages a 4-bit quantized, finetuned Mistral-7B-Instruct-v0.2 model trained on prior Maroc Telecom promotional messages (style, tone, constraints).
 - Supports both mock deterministic templates (fast iteration) and live inference (Remotely hosted GPU).
 - Includes a production-minded automation design (PySpark segmentation → Airflow scheduling → RAG enrichment → LLM generation → Telegram API delivery → scalable orchestration via n8n).
-- Deployed Streamlit UI (public demo): https://marketing-sms-platform.streamlit.app
+- Deployed Streamlit UI (public demo): https://streamlit-ui-mgwb.onrender.com
 
 ---
 ## Architecture Overview
